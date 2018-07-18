@@ -1,4 +1,7 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string.h>
 using namespace std;
 #define fi first
 #define se second
@@ -16,7 +19,7 @@ typedef vector<int> vi;
 vi prime;
 void Prime(int N){
 	int cnt = 0;
-	bool tag[N];
+	bool tag[1000];
 	memset(tag, 0, sizeof(tag));
 	tag[0] = tag[1] = true;
 	for(int i = 2;i < N;i++){
@@ -29,45 +32,48 @@ void Prime(int N){
 	}
 }
 inline bool find(int x){
-	return count(prime.begin(), prime.end(), x);
-}
-int n;
-vector<vector<int> > E;
-int l = 0;
-bool dfs(int a, int m[], int t, vector<int> e){
-	e.pb(a);
-	if(t == n && find(1+a)) {
-		E.pb(e);
-		return true;
-	}
-	m[a] = 1;
-	rep(i, 2, n)
+	vi::iterator it = prime.begin();
+	for(;it != prime.end();it++)
 	{
-		if(m[i] == 0 && find(m[i]+a)){
-			dfs(i, m, t+1, e);
-		}
+		if (x < *it) return false;
+		if (x == *it) return true;
 	}
 	return false;
 }
-int m[25];
+int n;
+void dfs(int a, int m[], int t, vi e){
+	e.pb(a);
+	if(t == n && find(1+a)) {
+		vi::iterator it = e.begin();
+		cout << *it;
+		it++;
+		for (;it != e.end();it++)
+			cout << ' ' << *it;
+		cout << endl;
+		return;
+	}
+	m[a] = 1;
+	rep(i, 2, n + 1)
+	{
+		if(m[i] == 0 && find(i+a)){
+			dfs(i, m, t+1, e);
+		}
+	}
+	m[a] = 0;
+	return;
+}
+int M[25];
 int main()
 {
 	std::ios::sync_with_stdio(false);
     std::cin.tie(0);
-	int n;
-	m[1] = 1;
+	Prime(400);
+	M[1] = 1;
 	vector<int> e;
-	e.pb(1);
 	int t = 0;
 	while(cin >> n){
-		dfs(1, m, 2, e);
-		cout << "case" << ++t << ':' << endl;
-		vector<vector<int> >::iterator it = E.begin();
-		for(;it != E.end();it++){
-			rep(i, 0, n)
-				cout << (*it)[i] <<' ';
-			cout << endl;
-		}
+		cout << "Case " << ++t << ':' << endl;
+		dfs(1, M, 1, e);
 		cout << endl;
 	}
 	return 0;
