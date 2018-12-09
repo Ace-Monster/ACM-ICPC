@@ -22,13 +22,15 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 char maps[205][205];
-int sum[205][205];
-struct Cmp{
-	bool operator()(const pair<int, int> &a, const pair<int, int> &b) const{
-		int i = 0, j = 0;
-		if(maps[a.fi][a.se] == 'x') i++;
-		if(maps[b.fi][b.se] == 'x') j++;
-		return i < j;
+int xi[4] = {1,0,-1,0};
+int yi[4] = {0,1,0,-1};
+bool flag[205][205];
+struct A{
+	int x,y;
+	int sum;
+	A(int tx, int ty, int tsum):x(tx),y(ty),sum(tsum) { }
+	bool operator<(const A &x) const{
+		return sum > x.sum;
 	}
 };
 int main()
@@ -36,32 +38,46 @@ int main()
 	std::ios::sync_with_stdio(false);
     std::cin.tie(0);
 	int n,m;
-	cin >> n >> m;
-	int x,y;
-	for(int i = 0;i < n;i++)
-		for(int j = 0;j < m;j++){
-			cin >> maps[i][j];
-			if(maps[i][j] == 'a') x = i, y = j;
-			sum[]
-		}
-	priority_queue<pair<int, int>, vector<pair<int, int> >, Cmp > q;
-	q.push(mp(x,y));
-	while(!q.empty()){
-		x = q.top().fi, y = q.top().se;
-		q.pop();
-		for(int i = 0;i < 4;i++){
-			tx = x + xi[i],ty = y + yi[i];
-			if(tx < 0 || tx >= n || ty < 0 || ty >= m) continue;
-			if(maps[tx][ty] == )
-			if(maps[tx][ty] != '#' && sum[tx][ty] == 0)
-			{
-				if(maps[tx][ty] == 'r')
-					sum[tx][ty] = min(sum[x][y]+2);
-				else
-					sum[tx][ty] = sum[x][y]+1;
+	//cin >> n >> m;
+	while(cin >> n >> m){
+		memset(flag, 0, sizeof(flag));
+		int x,y;
+		for(int i = 0;i < n;i++)
+			for(int j = 0;j < m;j++){
+				cin >> maps[i][j];
+				if(maps[i][j] == 'a') x = i, y = j;
 			}
+		flag[x][y] = true;
+		priority_queue<A> q;
+		q.push(A(x,y,0));
+		bool f = false;
+		while(!q.empty()){
+			A t = q.top();
+			q.pop();
+			for(int i = 0;i < 4;i++){
+				int tx = t.x + xi[i],ty = t.y + yi[i];
+				A tt(tx,ty,t.sum);
+				if(tx < 0 || tx >= n || ty < 0 || ty >= m) continue;
+				if(flag[tx][ty]) continue;
+				if(maps[tx][ty] == 'r'){ 
+					cout << t.sum + 1 << endl;
+					f = true;
+					break;
+				}
+				if(maps[tx][ty] != '#')
+				{
+					if(maps[tx][ty] == 'x')
+						tt.sum += 2;
+					else 
+						tt.sum++;
+					flag[tx][ty] = true;
+					q.push(tt);
+				}
+			}
+			if(f) break;
 		}
-		if(maps[x])
+		if(!f)
+			cout << "Poor ANGEL has to stay in the prison all his life." << endl;
 	}
 	return 0;
 }
