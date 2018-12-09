@@ -11,7 +11,9 @@ using namespace std;
 typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
-
+const int maxn = 100005;
+const int inf = 0x3f3f3f3f;
+const ll mod = 1e9;
 int main()
 {
 	std::ios::sync_with_stdio(false);

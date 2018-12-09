@@ -106,11 +106,39 @@ void spfa(int u) {
 
 
 //Floyd-Warshall
-for(int k = 1; k <= n; k++)
-    for(int i = 1; i <= n; i++)
-        for(int j = 1; j <= n; j++)
-            if(d[i][j] > d[i][k]+d[k][j]) 
-                d[i][j] = d[i][k]+d[k][j];
+int d[maxn][maxn];
+void Floyd(int n){
+	for(int k = 1; k <= n; k++)
+		for(int i = 1; i <= n; i++)
+			for(int j = 1; j <= n; j++)
+				if(d[i][j] > d[i][k]+d[k][j]) 
+					d[i][j] = d[i][k]+d[k][j];
+}
+
+
+//Kruskal
+struct Edge{
+	int from, to, val;
+	bool operator<(const Edge &x) const{
+		return val < x.val;
+	}
+}edge[maxe];
+Union-Find_set F;
+int Kruskal(int n){//返回最小生成树的边权和
+	F.init(n);
+	sort(edge, edge + n);
+	int ans = 0, cnt = 0, i = 0;//保证图联通的情况下不用判断i的大小
+	while(cnt < n - 1){
+		int from = edge[i].from, to = edge[i].to;
+		if(F.find(from) != F.find(to)){
+			F.unite(from, to);
+			cnt++;
+			ans += edge[i].val;
+		}
+		i++;
+	}
+	return ans;
+}
 
 
 //匈牙利
