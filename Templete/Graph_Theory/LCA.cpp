@@ -63,3 +63,51 @@ int query(int l,int r){//询问LCA
     int k = log2(r-l+1)+eps;
     return min(d[l][k], d[r-(1<<k)+1][k]);
 }
+
+//倍增LCA
+int deep[maxn],fa[maxn][32], d[maxn][32];
+int flag[maxn];
+void dfs(int u){
+	flag[u] = 1;
+	for(auto i:edge[u]){
+		int t = i.fi, w = i.se;
+		if(flag[t]) continue;
+		deep[t] = deep[u]+1;
+		fa[t][0] = u;//父亲 
+		//d[t][0] = w;//父-子路径信息 
+		dfs(t);
+	}
+}
+int lca(int x, int y){ 
+	if(find(x) != find(y)) return -1;//并查集判断是否一棵树上 
+	
+	if(deep[x] > deep[y]) swap(x, y);
+	
+	for(int i = 31;i >= 0;i--)
+		if(deep[fa[y][i]]>=deep[x])
+			y = fa[y][i];
+			
+	if(x == y) return x;//x即为父亲 
+	for(int i = 30;i >= 0;i--)
+		if(fa[x][i] != fa[y][i]){
+			x = fa[x][i];
+			y = fa[y][i];
+		}
+	return fa[x][0];
+}
+void init(int n){
+	rep(i, 1, n+1)
+		if(!flag[i]){
+			deep[i] = 1;
+			fa[i][0] = i;
+			dfs(i);
+		}
+	rep(i, 1, 30)
+		rep(j, 1, n+1){
+			fa[j][i] = fa[fa[j][i-1]][i-1];
+			//d[j][i] = min(d[j][i-1], d[fa[j][i-1]][i-1]);//子-辈路径更新方法 
+		}
+}
+
+//树链剖分求LCA：参见 数据结构(DataStruct)-树链剖分(HLD.cpp)
+
